@@ -45,7 +45,7 @@ public class JTrainerServlet extends HttpServlet {
 		// On renvoit l'objet json
 		resp.setContentType("application/json");      
 		PrintWriter out = resp.getWriter();
-		String jsonObject = "{ mod: \""+message+"\"}";
+		String jsonObject = "{ \"mod\": \""+message+"\"}";
 		out.print(jsonObject);
 		out.flush();
 	}
