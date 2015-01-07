@@ -2,25 +2,16 @@ package jtrain;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
-
-import javax.cache.Cache;
-import javax.cache.CacheFactory;
-import javax.cache.CacheManager;
-import javax.servlet.http.*;
-
-import org.datanucleus.sco.backed.Map;
-
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
-import com.google.appengine.api.memcache.ErrorHandlers;
+import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
-import com.google.appengine.api.memcache.jsr107cache.GCacheFactory;
-import com.google.apphosting.api.ApiProxy.LogRecord.Level;
-import com.google.appengine.api.datastore.Key;
 
 @SuppressWarnings("serial")
 public class JTrainerServlet extends HttpServlet {
