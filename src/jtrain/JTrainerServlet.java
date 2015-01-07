@@ -2,17 +2,59 @@ package jtrain;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 
+import javax.cache.Cache;
+import javax.cache.CacheFactory;
+import javax.cache.CacheManager;
 import javax.servlet.http.*;
+
+import org.datanucleus.sco.backed.Map;
+
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.memcache.ErrorHandlers;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
+import com.google.appengine.api.memcache.jsr107cache.GCacheFactory;
+import com.google.apphosting.api.ApiProxy.LogRecord.Level;
+import com.google.appengine.api.datastore.Key;
 
 @SuppressWarnings("serial")
 public class JTrainerServlet extends HttpServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
-		resp.setContentType("application/json");
-		// Get the printwriter object from resp to write the required json object to the output stream      
+		
+		// On met le message dans le datastore
+		DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+		Entity messageEntity = new Entity("Message");
+		messageEntity.setProperty("title", "Jtrainer is your fitness partner !");
+		ds.put(messageEntity);
+		
+		// On essaie de récupérer le message du cache
+		String key = "mod";
+		MemcacheService cache = MemcacheServiceFactory.getMemcacheService();
+		String message = (String)cache.get(key);
+		
+		// Si le message n'est pas en cache
+		if(message == null) {
+			// On cherche le message dans le datastore et on le met dans le cache
+			Key mKey = messageEntity.getKey();
+			try {
+				message = (String)ds.get(mKey).getProperty("message");
+				cache.put(key, message);
+			} catch (EntityNotFoundException e) {
+				e.printStackTrace();
+				message ="";
+			}
+		}
+		
+		// On renvoit l'objet json
+		resp.setContentType("application/json");      
 		PrintWriter out = resp.getWriter();
-		String jsonObject = "{ firstname: 'Nico', lastname: 'Pari' }";
+		String jsonObject = "{ mod: '"+message+"'}";
 		out.print(jsonObject);
 		out.flush();
 	}
