@@ -3,9 +3,15 @@ package jtrain;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.*;
+
+import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 
 /**
  * @author mlazzje
@@ -28,11 +34,11 @@ public class JLoginServlet extends HttpServlet {
 	
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
-		String openid = req.getParameter("openid");
-		String email = req.getParameter("email");
 				
-				/*
-				 * UserService userService = UserServiceFactory.getUserService();
+		Boolean logged = new Boolean(false);
+		/*HashMap  = new HashMap<String, String>();*/
+		
+		UserService userService = UserServiceFactory.getUserService();
         User user = userService.getCurrentUser(); // or req.getUserPrincipal()
         Set<String> attributes = new HashSet();
 
@@ -44,6 +50,7 @@ public class JLoginServlet extends HttpServlet {
             out.println("[<a href=\""
                     + userService.createLogoutURL(req.getRequestURI())
                     + "\">sign out</a>]");
+            logged = true;
         } else {
             out.println("Hello world! Sign in at: ");
             for (String providerName : openIdProviders.keySet()) {
@@ -52,8 +59,15 @@ public class JLoginServlet extends HttpServlet {
                         .getRequestURI(), null, providerUrl, attributes);
                 out.println("[<a href=\"" + loginUrl + "\">" + providerName + "</a>] ");
             }
+            logged=false;
         }
-*/
+        
+        /*// On renvoit l'objet json
+ 		resp.setContentType("application/json");      
+ 		PrintWriter res = resp.getWriter();
+ 		String jsonObject = "{ \"logged\": \""+logged+"\"}";
+ 		res.print(jsonObject);
+ 		res.flush();*/
 		
 	}
 }
