@@ -28,7 +28,6 @@ public class JTrainerServlet extends HttpServlet {
 		PreparedQuery pq = ds.prepare(q);
 		Entity messageEntity = pq.asSingleEntity();
 		if(messageEntity == null) {
-			System.out.println(messageEntity);
 			messageEntity = new Entity("Message");
 			messageEntity.setProperty("message", "Jtrainer is your fitness partner !");
 			ds.put(messageEntity);	
