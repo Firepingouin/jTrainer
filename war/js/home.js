@@ -5,7 +5,7 @@
 !function () {
 	console.log("noob");
 	var jqxhr = $.getJSON( "jtrainer", function( data ) {
-		$('#message').text(data['message']);
+		$('#message').text(data['mod']);
 	})
 	.fail(function() {
 		$('#message').text("Error loading message");
