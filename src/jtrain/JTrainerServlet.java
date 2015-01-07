@@ -21,7 +21,7 @@ public class JTrainerServlet extends HttpServlet {
 		// On met le message dans le datastore
 		DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
 		Entity messageEntity = new Entity("Message");
-		messageEntity.setProperty("title", "Jtrainer is your fitness partner !");
+		messageEntity.setProperty("message", "Jtrainer is your fitness partner !");
 		ds.put(messageEntity);
 		
 		// On essaie de récupérer le message du cache
