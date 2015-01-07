@@ -10,6 +10,8 @@ import javax.servlet.http.*;
  *
  * Servlet to manage login with openid
  *
+ * http	/login
+ *
  */
 @SuppressWarnings("serial")
 public class JLoginServlet extends HttpServlet {
