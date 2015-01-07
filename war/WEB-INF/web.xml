@@ -36,6 +36,14 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>JTrain</servlet-name>
 		<url-pattern>/train</url-pattern>
 	</servlet-mapping>
+	<servlet>
+		<servlet-name>JFixtures</servlet-name>
+		<servlet-class>jtrain.JFixturesServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>JFixtures</servlet-name>
+		<url-pattern>/fixtures</url-pattern>
+	</servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>

@@ -2,14 +2,18 @@ package jtrain;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 
@@ -20,9 +24,15 @@ public class JTrainerServlet extends HttpServlet {
 		
 		// On met le message dans le datastore
 		DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
-		Entity messageEntity = new Entity("Message");
-		messageEntity.setProperty("message", "Jtrainer is your fitness partner !");
-		ds.put(messageEntity);
+		Query q = new Query("Message");
+		PreparedQuery pq = ds.prepare(q);
+		Entity messageEntity = pq.asSingleEntity();
+		if(messageEntity == null) {
+			System.out.println(messageEntity);
+			messageEntity = new Entity("Message");
+			messageEntity.setProperty("message", "Jtrainer is your fitness partner !");
+			ds.put(messageEntity);	
+		}
 		
 		// On essaie de récupérer le message du cache
 		String key = "mod";
