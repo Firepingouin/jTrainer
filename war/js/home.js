@@ -3,7 +3,6 @@
  */
 
 !function () {
-	console.log("noob");
 	var jqxhr = $.getJSON( "jtrainer", function( data ) {
 		$('#message').text(data['mod']);
 	})
