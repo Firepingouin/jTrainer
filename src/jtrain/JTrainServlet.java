@@ -3,7 +3,9 @@ package jtrain;
 import java.awt.List;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
@@ -11,6 +13,9 @@ import javax.servlet.http.*;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.taskqueue.Queue;
+import com.google.appengine.api.taskqueue.QueueFactory;
+import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.labs.repackaged.org.json.JSONArray;
 import com.google.appengine.labs.repackaged.org.json.JSONException;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
@@ -19,12 +24,8 @@ import com.sun.java.swing.plaf.windows.resources.windows;
 /**
  * @author mlazzje
  *
- * Servlet to manage loading of :
- * 	- training plan 
- * 	- training exercises
- * And manage add of :
- * 	- training plan
- * 	- training exercises
+ *         Servlet to manage loading of : - training plan - training exercises
+ *         And manage add of : - training plan - training exercises
  * 
  */
 @SuppressWarnings("serial")
@@ -32,97 +33,43 @@ public class JTrainServlet extends HttpServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
 		resp.setContentType("application/json");
-		// Get the printwriter object from resp to write the required json object to the output stream      
+		// Get the printwriter object from resp to write the required json
+		// object to the output stream
 		PrintWriter out = resp.getWriter();
 		String jsonObject = "{ firstname: 'Nico', lastname: 'Pari' }";
 		out.print(jsonObject);
 		out.flush();
 	}
-	
+
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		
-		String action = req.getParameter("action");		
-		
-		if(action.equals("add")) {
-			
-			long newTrainingPlan = this.addTrainingPlan(req);
-			
-			// On retourne l'id du training plan créé
-			resp.setContentType("application/json");
-			JSONObject jsonObject = new JSONObject();
-			
-			try {
-				jsonObject.put("trainingPlanId", newTrainingPlan);
-				PrintWriter out = resp.getWriter();
-				out.print(jsonObject.toString());
-				out.flush();
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+
+		String action = req.getParameter("action");
+
+		if (action.equals("add")) {
+			this.addTrainingPlan(req);
 		}
 	}
 
-	private long addTrainingPlan(HttpServletRequest req) {
-		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-		
-		
+	private void addTrainingPlan(HttpServletRequest req) {
+
 		// Récupération de l'objet JSON
 		String jsonString = req.getParameter("trainingPlan");
-		System.out.println(jsonString);
-		if(jsonString != null) {
-			System.out.println("Parsing json");
-			try {
-				JSONObject json = new JSONObject(req.getParameter("trainingPlan"));
-				// Récupération des paramètres du Training Plan
-				String titre = json.getString("titre");
-				String description = json.getString("description");
-				long domaineId = json.getLong("domaineId");
-				
-				if(titre == null || description == null) return 0;
-				
-				// Ajout du training plan
-				Entity t = new Entity("TrainingPlan");
-				t.setProperty("titre", titre);
-				t.setProperty("description", description);
-				t.setProperty("domaineId", domaineId);
-				datastore.put(t);
-				
-				long trainingPlanId = (t.getKey().getId());
-				
-				// Récupération des exercices
-				JSONArray exercices = json.getJSONArray("exercices");
-				if(exercices != null) {
-					for (int i = 0; i < exercices.length(); i++) {
-						// Récupération des paramètres de l'exercice
-						JSONObject exercice = exercices.getJSONObject(i);
-						String titreExercice = exercice.getString("titre");
-						String descriptionExercice = exercice.getString("description");
-						int duree = exercice.getInt("duree");
-						int repetitions = exercice.getInt("repetitions");
-						
-						if(titreExercice == null || descriptionExercice == null) return 0;
-						
-						// Ajout de l'exercice
-						Entity e = new Entity("Exercice");
-						e.setProperty("titre", titreExercice);
-						e.setProperty("description", descriptionExercice);
-						e.setProperty("duree", duree);
-						e.setProperty("repetitions", repetitions);
-						e.setProperty("trainingPlanId", trainingPlanId);
-						
-						datastore.put(e);
-					}	
-				}
-				// On retourne l'id du training plan créé
-				return trainingPlanId;
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+		if (jsonString != null) {
+			Queue queue = QueueFactory.getDefaultQueue();
+
+			// Ajout d’une tache simple
+			TaskOptions task = TaskOptions.Builder.withUrl("/addTrainingPlan")
+					.param("trainingPlan", jsonString);
+			queue.add(task);
+
+			// Ajout d’une tache simple avec des paramètres de configuration
+			Map<String, String> headers = new HashMap<String, String>();
+			headers.put("X-AppEngine-TaskName", "task2");
+			headers.put("X-AppEngine-TaskRetryCount", "4");
+			queue.deleteTask("task");
+			queue.purge();
 		}
-		return 0;
 	}
 }
