@@ -12,6 +12,7 @@ import javax.servlet.http.*;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.appengine.labs.repackaged.org.json.JSONObject;
 
 /**
  * @author mlazzje
@@ -36,38 +37,49 @@ public class JLoginServlet extends HttpServlet {
 			throws IOException {
 				
 		Boolean logged = new Boolean(false);
-		/*HashMap  = new HashMap<String, String>();*/
+		HashMap<String, String> domains = new HashMap<String, String>();
+		JSONObject domainsJSON = new JSONObject();
+		String logoutUrl = "";
 		
 		UserService userService = UserServiceFactory.getUserService();
         User user = userService.getCurrentUser(); // or req.getUserPrincipal()
         Set<String> attributes = new HashSet();
 
-        resp.setContentType("text/html");
-        PrintWriter out = resp.getWriter();
+        /*resp.setContentType("text/html");
+        PrintWriter out = resp.getWriter();*/
 
         if (user != null) {
-            out.println("Hello <i>" + user.getNickname() + "</i>!");
-            out.println("[<a href=\""
-                    + userService.createLogoutURL(req.getRequestURI())
-                    + "\">sign out</a>]");
+            //out.println("Hello <i>" + user.getNickname() + "</i>!");
+            //out.println("[<a href=\""
+                    //+ userService.createLogoutURL(req.getRequestURI())
+                    //+ "\">sign out</a>]");
+        	logoutUrl = userService.createLogoutURL(req.getRequestURI());
             logged = true;
         } else {
-            out.println("Hello world! Sign in at: ");
+            //out.println("Hello world! Sign in at: ");
             for (String providerName : openIdProviders.keySet()) {
                 String providerUrl = openIdProviders.get(providerName);
                 String loginUrl = userService.createLoginURL(req
                         .getRequestURI(), null, providerUrl, attributes);
-                out.println("[<a href=\"" + loginUrl + "\">" + providerName + "</a>] ");
+                //out.println("[<a href=\"" + loginUrl + "\">" + providerName + "</a>] ");
+                domains.put(providerName, loginUrl);
             }
             logged=false;
+            domainsJSON = new JSONObject(domains);
         }
         
-        /*// On renvoit l'objet json
+        // On renvoit l'objet json
  		resp.setContentType("application/json");      
  		PrintWriter res = resp.getWriter();
- 		String jsonObject = "{ \"logged\": \""+logged+"\"}";
+ 		String jsonObject = "{ \"logged\": \""+logged+"\"";
+ 		if(logged) {
+ 			jsonObject = jsonObject + ", \"user\" : { \"mail\" : \""+user.getEmail()+"\", \"nickname\" : \""+user.getNickname()+"\"}, \"logout\" : \""+logoutUrl+"\"";
+ 		} else {
+ 			jsonObject = jsonObject + ", \"domains\" : "+domainsJSON;
+ 		}
+ 		jsonObject = jsonObject + "}";
  		res.print(jsonObject);
- 		res.flush();*/
+ 		res.flush();
 		
 	}
 }
