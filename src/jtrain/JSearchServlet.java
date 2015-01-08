@@ -1,7 +1,11 @@
 package jtrain;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -72,24 +76,60 @@ public class JSearchServlet extends HttpServlet {
 			} else if (requestType.equals("search")) {
 				String domaineId = req.getParameter("domainId");
 				String searchKeyword = req.getParameter("searchKeyword");
-				
-				JSONObject results = new JSONObject();
-				if(domaineId != null) {
-					results = this.getAllForDomaine(domaineId);
-				} else if(searchKeyword != null) {
-					results = this.search(searchKeyword);
+
+				try {
+					JSONObject results = new JSONObject();
+					
+					if (domaineId != null) {
+						results.putOpt("searchResults",
+								this.getAllForDomaine(domaineId));
+					} else if (searchKeyword != null) {
+						results.putOpt("searchResults",
+								this.search(searchKeyword));
+					}
+					
+					JSONArray news = this.fetchNews();
+					results.put("news", news);
+					
+					// On retourne un objet JSON contenant les résultats de la
+					// recherche
+					resp.setContentType("application/json");
+					PrintWriter out = resp.getWriter();
+					out.print(results.toString());
+					out.flush();
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-				// On retourne un objet JSON contenant les résultats de la recherche
-				resp.setContentType("application/json");
-				PrintWriter out = resp.getWriter();
-				out.print(results.toString());
-				out.flush();
 			}
 		}
 	}
 
+	private JSONArray fetchNews() {
+		JSONArray news = new JSONArray();
+
+		// ...
+		try {
+		    URL url = new URL("http://www.runnersworld.com/taxonomy/term/740/1/feed");
+		    BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+		    String line;
+
+		    while ((line = reader.readLine()) != null) {
+		        System.out.println(line);
+		    }
+		    reader.close();
+
+		} catch (MalformedURLException e) {
+		    // ...
+		} catch (IOException e) {
+		    // ...
+		}
+
+		return news;
+	}
+
 	private JSONObject search(String searchKeyword) {
-		
+
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		List<JSONObject> trainingPlans = new ArrayList<JSONObject>();
@@ -97,8 +137,8 @@ public class JSearchServlet extends HttpServlet {
 		JSONObject results = new JSONObject();
 
 		// On filtre sur le domaine
-		Filter titreFilter = new FilterPredicate("titre",
-				FilterOperator.EQUAL, searchKeyword.toString());
+		Filter titreFilter = new FilterPredicate("titre", FilterOperator.EQUAL,
+				searchKeyword.toString());
 
 		// Requete sur les training plans, puis les exercices
 		Query q = new Query("TrainingPlan").setFilter(titreFilter);
@@ -111,7 +151,8 @@ public class JSearchServlet extends HttpServlet {
 			String description = (String) trainingPlan
 					.getProperty("description");
 			Long trainingPlanId = trainingPlan.getKey().getId();
-			Long domaineId = Long.parseLong(trainingPlan.getProperty("domaineId").toString());
+			Long domaineId = Long.parseLong(trainingPlan.getProperty(
+					"domaineId").toString());
 
 			try {
 				// On construit l'objet JSON du training plan
@@ -132,7 +173,8 @@ public class JSearchServlet extends HttpServlet {
 				PreparedQuery ptotalTimeQuery = datastore
 						.prepare(totalTimeQuery);
 
-				// Pour chaque exercice trouvé on somme la durée à la durée totale
+				// Pour chaque exercice trouvé on somme la durée à la durée
+				// totale
 				for (Entity exercice : ptotalTimeQuery.asIterable()) {
 					// On somme la durée
 					long duree = (long) exercice.getProperty("duree");
@@ -148,19 +190,22 @@ public class JSearchServlet extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
-		
+
 		// On requête sur les exercices
 		q = new Query("Exercice").setFilter(titreFilter);
 		pq = datastore.prepare(q);
-		
+
 		// Pour chaque exercice correspondant
 		for (Entity exercice : pq.asIterable()) {
 			// Récupération des attributs du training plan
 			String titre = (String) exercice.getProperty("titre");
 			String description = (String) exercice.getProperty("description");
-			int duree = Integer.parseInt(exercice.getProperty("duree").toString());
-			int repetitions = Integer.parseInt(exercice.getProperty("repetitions").toString());
-			Long trainingPlanId = Long.parseLong(exercice.getProperty("trainingPlanId").toString());
+			int duree = Integer.parseInt(exercice.getProperty("duree")
+					.toString());
+			int repetitions = Integer.parseInt(exercice.getProperty(
+					"repetitions").toString());
+			Long trainingPlanId = Long.parseLong(exercice.getProperty(
+					"trainingPlanId").toString());
 			Long exerciceId = exercice.getKey().getId();
 
 			try {
@@ -174,7 +219,7 @@ public class JSearchServlet extends HttpServlet {
 				exerciceJson.put("repetitions", repetitions);
 				exerciceJson.put("trainingPlanId", trainingPlanId);
 				exerciceJson.put("exerciceId", exerciceId);
-				
+
 				// On ajoute l'exercice au tableau de résultats
 				exercices.add(exerciceJson);
 			} catch (JSONException e) {
