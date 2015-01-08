@@ -36,6 +36,14 @@ public class JLoginServlet extends HttpServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
 				
+		// TODO store in memcache
+		
+		String callbackUrl = req.getParameter("callback");
+		
+		if(callbackUrl==null) {
+			callbackUrl = req.getRequestURI();
+		}
+		
 		Boolean logged = new Boolean(false);
 		HashMap<String, String> domains = new HashMap<String, String>();
 		JSONObject domainsJSON = new JSONObject();
@@ -59,8 +67,7 @@ public class JLoginServlet extends HttpServlet {
             //out.println("Hello world! Sign in at: ");
             for (String providerName : openIdProviders.keySet()) {
                 String providerUrl = openIdProviders.get(providerName);
-                String loginUrl = userService.createLoginURL(req
-                        .getRequestURI(), null, providerUrl, attributes);
+                String loginUrl = userService.createLoginURL(callbackUrl, null, providerUrl, attributes);
                 //out.println("[<a href=\"" + loginUrl + "\">" + providerName + "</a>] ");
                 domains.put(providerName, loginUrl);
             }
