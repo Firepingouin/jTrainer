@@ -32,4 +32,4 @@ local.properties
 # Java class
 *.class
 #google app engine
-war/WEB-INF/appengine-generated
+war/WEB-INF/appengine-generated/*
