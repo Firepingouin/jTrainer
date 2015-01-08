@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 
 import javax.servlet.http.*;
 
+import com.sun.java.swing.plaf.windows.resources.windows;
+
 /**
  * @author mlazzje
  *
@@ -20,6 +22,9 @@ import javax.servlet.http.*;
 public class JTrainServlet extends HttpServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
+		
+		
+		
 		resp.setContentType("application/json");
 		// Get the printwriter object from resp to write the required json object to the output stream      
 		PrintWriter out = resp.getWriter();
