@@ -24,7 +24,7 @@ public class JTrainingTaskServlet extends HttpServlet {
 				.getDatastoreService();
 
 		try {
-			JSONObject json = new JSONObject(req.getParameter("trainingPlan"));
+			JSONObject json = new JSONObject(req.getParameter("trainingPlan")).getJSONObject("trainingPlan");
 
 			// Récupération des paramètres du Training Plan
 			String titre = json.getString("titre");
