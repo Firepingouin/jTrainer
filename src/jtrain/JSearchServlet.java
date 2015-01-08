@@ -53,7 +53,7 @@ public class JSearchServlet extends HttpServlet {
 				for (Entity result : pq.asIterable()) {
 					JSONObject domaine = new JSONObject();
 					try {
-						domaine.put("key", result.getKey().toString());
+						domaine.put("id", result.getKey().getId());
 						domaine.put("nom", (String) result.getProperty("nom"));
 					} catch (JSONException e) {
 						e.printStackTrace();
