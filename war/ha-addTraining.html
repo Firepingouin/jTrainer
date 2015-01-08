@@ -38,18 +38,22 @@
       </nav>
       <!-- ------------------------------------------- HEADER ZONE END ------------------------------------------- -->
       
-      <form role="form">
+      <div class="mid" id="pleaseWait" data-backdrop="static" data-keyboard="false">
+                <img class="loadImg" src="img/loader.gif"><img>
+    	</div>
+      
+      <form id="formAddTraining" role="form">
           <div class="row" style="margin-bottom:10px">
               <div class=" col-md-1 col-sm-0 col-xs-0 " ></div>
              <div class=" col-md-2 col-sm-2 col-xs-12 ">
                 <label for="inputTitle">Title</label>  
              </div>
             <div class=" col-md-6 col-sm-6 col-xs-12 ">
-                <input type="email" class="form-control" id="inputTitle" placeholder="Enter your Training plan title">
+                <input name="trainingPlan[titre]" class="form-control" id="inputTitle" placeholder="Enter your Training plan title">
              </div>
               <div class=" col-md-3 col-sm-4 hidden-xs">
                   <div class=" col-md-4 col-sm-4 hidden-xs">
-                     <p id="totalTimeValue"><span class="glyphicon glyphicon-time"></span> 1:20:15</p>
+                     <span style="float:left;" class="glyphicon glyphicon-time"></span> <p id="totalTimeValue">1:20:15</p>
                   </div>
              </div>
         </div>
@@ -60,7 +64,7 @@
             </div>
             <div class=" col-md-6 col-sm-6 col-xs-12 ">
                 <!--<input type="email" class="form-control" id="inputDescription" placeholder="Enter your Training plan Description">-->
-                <textarea id="inputDescription" class="form-control" rows="4"></textarea>
+                <textarea name="trainingPlan[description]" id="inputDescription" class="form-control" rows="4"></textarea>
             </div>
         </div>
         <div class="row" style="margin-top:10px">
@@ -70,11 +74,7 @@
             </div>
             <div class=" col-md-6 col-sm-6 col-xs-12 " >
                 <p>
-                    <select id="e1" class="select2-container populate" style="width:100%">
-                        <option value="Running">Running</option>
-                        <option value="Volleyball">Volleyball</option>
-                        <option value="Boxe">Boxe</option>
-                        <option value="BaseBall">BaseBall</option>
+                    <select name="trainingPlan[domaineId]" id="selectDomains" class="select2-container populate" style="width:100%">
                     </select>
                 </p>
             </div>
@@ -86,26 +86,25 @@
               
               <div class="row">
                   <div class=" col-md-1 col-sm-1 col-xs-1 " >
-                       <button type="button" class="btn btn-success">Add an Exercice</button>
+                       <button onclick="addExercice()" type="button" class="btn btn-success">Add an Exercice</button>
                    </div>
                  <div class=" col-md-12 col-sm-12 col-xs-12 " ></div>
               </div>
               <div class="row">
                   <div class=" col-md-2 col-sm-0 col-xs-0 " ></div>
                     <div class=" col-md-2 col-sm-2 col-xs-12 ">
-                        <label for="titleDescription">Ex. Title</label>  
+                        <label for="exerciceTitle">Ex. Title</label>  
                     </div>
                     <div class=" col-md-6 col-sm-6 col-xs-12 ">
-                        <input type="email" class="form-control" id="titleDescription" placeholder="Enter your exercice title">
+                        <input type="text" class="form-control" id="exerciceTitle" placeholder="Enter your exercice title">
                     </div>
                     <div class=" col-md-2 col-sm-4 col-xs-12 ">
                         <div class="input-group">
-                            <input type="text" class="form-control">
+                            <input id="exerciceHour" type="number" value="0" min="0" max="59" class="form-control">
                             <span class="input-group-addon" style="padding:0px">:</span>
-                           <input type="text" class="form-control">
+                           <input id="exerciceMin" type="number" value="0" min="0" max="59" class="form-control">
                           <span class="input-group-addon" style="padding:0px">:</span>
-                          <input type="text" class="form-control">
-
+                          <input id="exerciceSec" type="number" value="0" min="0" class="form-control">
                         </div>
                     </div>
                 </div>
@@ -122,42 +121,33 @@
                        <h1 style="text-align: center;"> <span class="glyphicon glyphicon-time"></span> </h1>
                     </div>
                 </div>
+                <div class="row" style="margin-top:10px">
+               <div class=" col-md-2 col-sm-0 col-xs-0 " ></div>
+                <div class=" col-md-2 col-sm-2 col-xs-12 ">
+                    <label for="exerciceRepetitions">Nb. Repetitions</label>  
+                </div>
+                <div class=" col-md-6 col-sm-6 col-xs-12 ">
+                    <!--<input type="email" class="form-control" id="exerciceDescription" placeholder="Enter your exercice title">-->
+                    <input id="exerciceRepetitions" type="number" value="1" min="1" class="form-control"/>
+                </div>
+                  <div class=" col-md-2 col-sm-4 hidden-xs">
+                    </div>
+                </div>
         </div>
         </div>
         </div>
           
          <div class=" col-md-1 col-sm-0 col-xs-0 " ></div>
         <div class=" col-md-9 col-sm-12 col-xs-12 " >
-                <table class="table table-striped table-condensed">
-                    <tr>
-                        <td>1</td>
-                        <td>Warm Up</td>
-                        <td class="hidden-xs"><p>gentium vicinarum excursus sollicitudo pervigil veterum per oportunos saltus erexit et cautos. haec quoque civitates habet inter oppida quaedam ingentes Bostram et Gerasam atque Philadelphiam murorum firmitate cautissimas.</p></td>
-                        <td> 10 min</td>
-                        <td> <button type="submit" class="btn btn-danger btn-sm"> <span class="glyphicon glyphicon-remove"></span> </button></td>
-                    </tr>
-                      <tr>
-                        <td>1</td>
-                        <td>Warm Up</td>
-                        <td class="hidden-xs"><p>gentium vicinarum excursus sollicitudo pervigil veterum per oportunos saltus erexit et cautos. haec quoque civitates habet inter oppida quaedam ingentes Bostram et Gerasam atque Philadelphiam murorum firmitate cautissimas.</p></td>
-                        <td> 10 min</td>
-                        <td> <button type="submit" class="btn btn-danger btn-sm"> <span class="glyphicon glyphicon-remove"></span> </button></td>
-                    </tr>
-                      <tr>
-                        <td>1</td>
-                        <td>Warm Up</td>
-                        <td class="hidden-xs"><p>gentium vicinarum excursus sollicitudo pervigil veterum per oportunos saltus erexit et cautos. haec quoque civitates habet inter oppida quaedam ingentes Bostram et Gerasam atque Philadelphiam murorum firmitate cautissimas.</p></td>
-                        <td> 10 min</td>
-                        <td> <button type="submit" class="btn btn-danger btn-sm"> <span class="glyphicon glyphicon-remove"></span> </button></td>
-                    </tr>
-                    
+                <table id="tableExercices" class="table table-striped table-condensed">
+     				
                 </table>
              </div>
-            
+            <input type="hidden" name="action" value="add"> 
     <div class=" col-md-2 ol-sm-0 col-xs-0 " ></div>
     <div class=" col-md-10 ol-sm-5 col-xs-0 " ></div>
     <div class=" col-md-2 ol-sm-5 col-xs-12 text-center" >
-        <button type="submit" class="btn btn-danger btn-sm"> <span class="glyphicon glyphicon-remove"></span> </button>
+        <button class="btn btn-danger btn-sm"> <span class="glyphicon glyphicon-remove"></span> </button>
         <button type="submit" class="btn btn-success btn-lg"> <span class="glyphicon glyphicon-ok"></span> </button>
     </div>
 
@@ -187,6 +177,7 @@
     </script>
              
     <script src="js/header.js"></script>
+    <script src="js/add-training.js"></script>         
              
   </body>
 </html>

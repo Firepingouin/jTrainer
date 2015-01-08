@@ -17,6 +17,7 @@
 		}
 		toAppend+= "</div>";
 		$('#domainsResults').html(toAppend);
+		$('#pleaseWait').hide();
 	},"json")
 	.fail(function() {
 		console.log("Search domains fail !");
@@ -25,50 +26,3 @@
 		console.log( "Search domains ok !" );
 	});
 }();
-
-/* 
- * <div class=" col-md-12 col-sm-12 col-xs-12" style="margin-bottom:80px">
-          <div class=" col-md-3 col-sm-3 col-xs-3 ">
-            <button class="btn btn-default btn-lg"><span class="glyphicon glyphicon-tree-deciduous"></span></button> <label> RUN </label>
-          </div>
-                    <div class=" col-md-3 col-sm-3 col-xs-3 ">
-            <button type="submit" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-tree-deciduous"></span></button> <label> RUN </label>
-           </div>
-                    <div class=" col-md-3 col-sm-3 col-xs-3 ">
-            <button type="submit" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-tree-deciduous"></span></button> <label> RUN </label>
-           </div>
-                    <div class=" col-md-3 col-sm-3 col-xs-3 ">
-            <button type="submit" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-tree-deciduous"></span></button> <label> RUN </label>
-           </div>
-       </div>
-      
-      <div class=" col-md-12 col-sm-12 col-xs-12 " style="margin-bottom:80px">
-          <div class=" col-md-3 col-sm-3 col-xs-3 ">
-            <button type="submit" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-tree-deciduous"></span></button> <label> RUN </label>
-          </div>
-                    <div class=" col-md-3 col-sm-3 col-xs-3 ">
-                    <button type="submit" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-tree-deciduous"></span></button> <label> RUN </label>
-           </div>
-                    <div class=" col-md-3 col-sm-3 col-xs-3 ">
-            <button type="submit" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-tree-deciduous"></span></button> <label> RUN </label>
-           </div>
-                    <div class=" col-md-3 col-sm-3 col-xs-3 ">
-            <button type="submit" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-tree-deciduous"></span></button> <label> RUN </label>
-           </div>
-       </div>
-      
-      <div class=" col-md-12 col-sm-12 col-xs-12 ">
-          <div class=" col-md-3 col-sm-3 col-xs-3 ">
-            <button type="submit" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-tree-deciduous"></span></button> <label> RUN </label>
-          </div>
-                    <div class=" col-md-3 col-sm-3 col-xs-3 ">
-            <button type="submit" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-tree-deciduous"></span></button> <label> RUN </label>
-           </div>
-                    <div class=" col-md-3 col-sm-3 col-xs-3 ">
-            <button type="submit" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-tree-deciduous"></span></button> <label> RUN </label>
-           </div>
-                    <div class=" col-md-3 col-sm-3 col-xs-3 ">
-            <button type="submit" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-tree-deciduous"></span></button> <label> RUN </label>
-           </div>
-       </div>
-       */
