@@ -1,24 +1,26 @@
 package jtrain;
 
-import java.io.BufferedReader;
+import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.io.PrintWriter;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-
 import javax.servlet.ServletException;
-import javax.servlet.http.*;
-
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
@@ -79,7 +81,7 @@ public class JSearchServlet extends HttpServlet {
 
 				try {
 					JSONObject results = new JSONObject();
-					
+
 					if (domaineId != null) {
 						results.putOpt("searchResults",
 								this.getAllForDomaine(domaineId));
@@ -87,10 +89,16 @@ public class JSearchServlet extends HttpServlet {
 						results.putOpt("searchResults",
 								this.search(searchKeyword));
 					}
-					
-					JSONArray news = this.fetchNews();
+
+					JSONArray news = new JSONArray();
+					try {
+						news = this.fetchNews();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					results.put("news", news);
-					
+
 					// On retourne un objet JSON contenant les résultats de la
 					// recherche
 					resp.setContentType("application/json");
@@ -105,26 +113,32 @@ public class JSearchServlet extends HttpServlet {
 		}
 	}
 
-	private JSONArray fetchNews() {
+	private JSONArray fetchNews() throws Exception {
+		// Récupération des news à partir de l'url donnée
 		JSONArray news = new JSONArray();
-
-		// ...
-		try {
-		    URL url = new URL("http://www.runnersworld.com/taxonomy/term/740/1/feed");
-		    BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-		    String line;
-
-		    while ((line = reader.readLine()) != null) {
-		        System.out.println(line);
-		    }
-		    reader.close();
-
-		} catch (MalformedURLException e) {
-		    // ...
-		} catch (IOException e) {
-		    // ...
+		URL url = new URL(
+				"http://www.runnersworld.com/taxonomy/term/740/1/feed");
+		// Parsing du dom
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		InputStream in = new BufferedInputStream(url.openStream());
+		Document doc = dBuilder.parse(in);
+		NodeList nl = doc.getElementsByTagName("item");
+		Node attr;
+		// Ajout du titre et de la description de la news
+		for (int i = 0; i < nl.getLength(); i++) {
+			NodeList nl2 = nl.item(i).getChildNodes();
+			JSONObject currentNews = new JSONObject();
+			for (int i2 = 0; i2 < nl2.getLength(); i2++) {
+				attr = nl2.item(i2);
+				if (attr.getNodeName().equals("title")) {
+					currentNews.put("titre", attr.getTextContent());
+				} else if (attr.getNodeName().equals("description")) {
+					currentNews.put("description", attr.getTextContent());
+				}
+			}
+			news.put(currentNews);
 		}
-
 		return news;
 	}
 
