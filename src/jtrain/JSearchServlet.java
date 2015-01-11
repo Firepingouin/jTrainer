@@ -7,15 +7,19 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -124,20 +128,17 @@ public class JSearchServlet extends HttpServlet {
 		InputStream in = new BufferedInputStream(url.openStream());
 		Document doc = dBuilder.parse(in);
 		NodeList nl = doc.getElementsByTagName("item");
-		Node attr;
 		// Ajout du titre et de la description de la news
 		for (int i = 0; i < nl.getLength(); i++) {
-			NodeList nl2 = nl.item(i).getChildNodes();
-			JSONObject currentNews = new JSONObject();
-			for (int i2 = 0; i2 < nl2.getLength(); i2++) {
-				attr = nl2.item(i2);
-				if (attr.getNodeName().equals("title")) {
-					currentNews.put("titre", attr.getTextContent());
-				} else if (attr.getNodeName().equals("description")) {
-					currentNews.put("description", attr.getTextContent());
-				}
+			Node currentNode = nl.item(i);
+			
+			if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
+				JSONObject currentNews = new JSONObject();
+				Element e = (Element) currentNode;
+				currentNews.put("titre", e.getElementsByTagName("title").item(0).getTextContent());
+				currentNews.put("description", e.getElementsByTagName("description").item(0).getTextContent());
+				news.put(currentNews);
 			}
-			news.put(currentNews);
 		}
 		return news;
 	}
