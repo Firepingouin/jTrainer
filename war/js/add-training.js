@@ -43,12 +43,20 @@
 }();
 
 function getTabExercices() {
-	for(var test=0;test<id;test++) {
-		console.log("for");
+	var tr=0;
+	var test=0;
+	var tabExs = [];
+	while(tr<$("#tableExercices tr").length) {
 		if($('#'+test).length!=0) {
 			// TODO parcourir les td dans les tr pour reconstruire le tableau d'exos
+			//console.log($('#'+test+' [name="Exercice['+test+'][repetitions]"]').text());
+			tabExs.push(test);
+			tr++;
 		}
+		test++;
+		if(test==100) { tr = $("#tableExercices tr").length +1; console.log("Infinite loop tabexercices") } // avoid infinite loop
 	}
+	return tabExs;
 }
 
 function addExercice() {

@@ -14,9 +14,9 @@ a{
 
 .mid {
 	position: fixed;
-  top: 35%;
+  top: 30%;
   right: 40%;
-  bottom: 45%;
+  /*bottom: 45%;*/
   left: 40%;
   z-index: 1050;
   overflow: hidden;
