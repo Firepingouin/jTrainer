@@ -9,7 +9,7 @@
 		console.log("allo");
 		$('#pleaseWait').show();
 	    var postData = $(this).serializeArray();
-	    postData["exercices"] = getTabExercices();
+	    postData["exercices"] = getJsonExercices();
 	    $.ajax(
 	    {
 	        url : "train",
