@@ -9,6 +9,7 @@
 		console.log("allo");
 		$('#pleaseWait').show();
 	    var postData = $(this).serializeArray();
+	    postData["exercices"] = getTabExercices();
 	    $.ajax(
 	    {
 	        url : "train",
@@ -41,6 +42,21 @@
 	});
 	
 }();
+
+function getJsonExercices() {
+	var tabExs = getTabExercices();
+	var row = 0;
+	var json = {};
+	while(row<tabExs.length) {
+		json[row] = {};
+		json[row]["titre"] = $('#'+tabExs[row]+' td[name="Exercice['+tabExs[row]+'][titre]"]').text();
+		json[row]["repetitions"] = $('#'+tabExs[row]+' td[name="Exercice['+tabExs[row]+'][repetitions]"]').text();
+		json[row]["description"] = $('#'+tabExs[row]+' td[name="Exercice['+tabExs[row]+'][description]"]').text();
+		var duree = $('#'+tabExs[row]+' td[name="Exercice['+tabExs[row]+'][titre]"]').text().split(' ');
+		json[row]["duree"] = duree[0];
+	}
+	return json;
+}
 
 function getTabExercices() {
 	var tr=0;
