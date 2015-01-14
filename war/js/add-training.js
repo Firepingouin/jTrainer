@@ -120,7 +120,7 @@
 										that.remove(exercice);
 										
 									});
-					console.log( button ) ;
+
 					// output
 					row.append(
 					
@@ -128,9 +128,11 @@
 							+ '<td>' + exercice.title + '</td>'
 							+ '<td>' + exercice.desc + '</td>'
 							+ '<td>' + exercice.duree + ' sec</td>'
-							+ '<td>' + button + '</td>'
 					
 					);
+					row.append($('<td>')
+							.append(button)
+				    );
 					
 					this.gui.table.append(row);
 					
@@ -144,6 +146,7 @@
 					while(flag && i<this.exercices.length){
 						if(this.exercices[i].id === exercice.id){
 							$('#ex-'+exercice.id).remove();
+							// todo supprimer du tableau
 							flag = false;
 						}
 						i++;
