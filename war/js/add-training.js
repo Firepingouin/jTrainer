@@ -112,7 +112,7 @@
 					
 					var row =$('<tr>').attr({id : 'ex-'+exercice.id});
 					
-					$('<button>').attr({ type : button})
+					var button = $('<button>').attr({ type : button})
 									.addClass('btn btn-danger btn-sm')
 									.append('<span class="glyphicon glyphicon-remove"></span>')
 									.on('click', function(){
@@ -121,44 +121,35 @@
 										
 									});
 					
-					//UGLY AS FUCK -> append cells to row
+					// output
 					row.append(
 					
 							'<td>' + exercice.rep + '</td>'
 							+ '<td>' + exercice.title + '</td>'
 							+ '<td>' + exercice.desc + '</td>'
 							+ '<td>' + exercice.duree + ' sec</td>'
-							+ '<td>' +  + '</td>'
+							+ '<td>' + button + '</td>'
 					
 					);
 					
 					this.gui.table.append(row);
 					
-					// output
-					
-					var row =
-						ar toAppend = '<tr id="'+id+'">';
-					toAppend += '<td name="Exercice['+id+'][repetitions]">'+rep+'</td>';
-					toAppend += '<td name="Exercice['+id+'][titre]">'+title+'</td>';
-					toAppend += '<td class="hidden-xs" name="Exercice['+id+'][description]"> '+desc+'</td>';	
-					toAppend += '<td name="Exercice['+id+'][duree]">'+time+' sec</td>';
-					toAppend += '<td> <button onclick="removeExercice('+id+')" class="btn btn-danger btn-sm"> <span class="glyphicon glyphicon-remove"></span> </button></td>'
-					toAppend += '</tr>';
-					
-					
-					
-					
 				},
 				
 				remove : function(exercice) {
 					
-					for(var i =0; i <this.exercices.length; i++){
+					var flag = true;
+					var i = 0;
+					
+					while(flag && i<this.exercices.length){
 						if(this.exercices[i].id === exercice.id){
-							
+							$('#'+id).remove()
+							flag = false;
 						}
+						i++;
 					}
 					
-					$('#ex'+exercice.id).remove();
+					$('#ex-'+exercice.id).remove();
 					
 					
 				},
@@ -177,12 +168,6 @@
 		
 		handleExercice.init(tools);
 		
-		/* $('#exerciceTitle').val();
-	var desc = $('#exerciceDescription').val();
-	var hour = $('#exerciceHour').val();
-	var min = $('#exerciceMin').val();
-	var sec = $('#exerciceSec').val();
-	var rep = $('#exerciceRepetitions').val();*/
 	});
 	
 }(); 
