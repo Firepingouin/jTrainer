@@ -96,7 +96,6 @@
 					
 					var that =this;
 					
-					
 					var exercice = {
 						
 						id : ++that.cptID,
@@ -105,7 +104,8 @@
  						desc : that.gui.inputs.desc.val(),
 						duree : that.tools.toSec(that.gui.inputs.hour.val(),
 												that.gui.inputs.min.val(),
-												that.gui.inputs.sec.val()),
+												that.gui.inputs.sec.val(),
+												that.gui.inputs.rep.val()),
 					};
 					
 					this.exercices.push(exercice);
@@ -120,7 +120,7 @@
 										that.remove(exercice);
 										
 									});
-					
+					console.log( button ) ;
 					// output
 					row.append(
 					
@@ -143,13 +143,11 @@
 					
 					while(flag && i<this.exercices.length){
 						if(this.exercices[i].id === exercice.id){
-							$('#'+id).remove()
+							$('#ex-'+exercice.id).remove();
 							flag = false;
 						}
 						i++;
 					}
-					
-					$('#ex-'+exercice.id).remove();
 					
 					
 				},
@@ -158,7 +156,7 @@
 		
 		var tools = {
 				
-				toSec : function(hour,min,sec) {
+				toSec : function(hour,min,sec,rep) {
 					
 					return (parseInt(hour)*3600 + parseInt(min)*60 + parseInt(sec))*rep;
 					
