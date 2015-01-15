@@ -37,7 +37,7 @@ Liste des tâches :
 Liste des questions réalisées :
 	- Page d'accueil
 	- Page de recherche
-	- Ajout de plan d'entrainement
+	- Ajout de plans d'entrainement
 		- Page web
 		- Fonctionnalité d'ajout
 	- Résultats de recherche
