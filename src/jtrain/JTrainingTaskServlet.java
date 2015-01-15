@@ -45,6 +45,7 @@ public class JTrainingTaskServlet extends HttpServlet {
 
 			// Récupération des exercices
 			JSONArray exercices = json.getJSONArray("exercices");
+			System.out.println(exercices);
 			if (exercices != null) {
 				for (int i = 0; i < exercices.length(); i++) {
 					// Récupération des paramètres de l'exercice

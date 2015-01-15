@@ -55,7 +55,9 @@ public class JTrainServlet extends HttpServlet {
 	private void addTrainingPlan(HttpServletRequest req) {
 
 		// Récupération de l'objet JSON
+		System.out.println("--");
 		String jsonString = req.getParameter("trainingPlan");
+		System.out.println(jsonString);
 		if (jsonString != null) {
 			Queue queue = QueueFactory.getDefaultQueue();
 

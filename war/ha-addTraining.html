@@ -42,14 +42,14 @@
                 <img class="loadImg" src="img/loader.gif"><img>
     	</div>
       
-      <form id="formAddTraining" role="form">
+      <form action="#" id="formAddTraining" role="form">
           <div class="row" style="margin-bottom:10px">
               <div class=" col-md-1 col-sm-0 col-xs-0 " ></div>
              <div class=" col-md-2 col-sm-2 col-xs-12 ">
                 <label for="inputTitle">Title</label>  
              </div>
             <div class=" col-md-6 col-sm-6 col-xs-12 ">
-                <input name="trainingPlan[titre]" class="form-control" id="inputTitle" placeholder="Enter your Training plan title">
+                <input name="titre" class="form-control" id="inputTitle" placeholder="Enter your Training plan title">
              </div>
               <div class=" col-md-3 col-sm-4 hidden-xs">
                   <div class=" col-md-4 col-sm-4 hidden-xs">
@@ -64,7 +64,7 @@
             </div>
             <div class=" col-md-6 col-sm-6 col-xs-12 ">
                 <!--<input type="email" class="form-control" id="inputDescription" placeholder="Enter your Training plan Description">-->
-                <textarea name="trainingPlan[description]" id="inputDescription" class="form-control" rows="4"></textarea>
+                <textarea name="description" id="inputDescription" class="form-control" rows="4"></textarea>
             </div>
         </div>
         <div class="row" style="margin-top:10px">
@@ -74,7 +74,7 @@
             </div>
             <div class=" col-md-6 col-sm-6 col-xs-12 " >
                 <p>
-                    <select name="trainingPlan[domaineId]" id="selectDomains" class="select2-container populate" style="width:100%">
+                    <select name="domaineId" id="selectDomains" class="select2-container populate" style="width:100%">
                     </select>
                 </p>
             </div>
@@ -143,12 +143,11 @@
      				
                 </table>
              </div>
-            <input type="hidden" name="action" value="add"> 
     <div class=" col-md-2 ol-sm-0 col-xs-0 " ></div>
     <div class=" col-md-10 ol-sm-5 col-xs-0 " ></div>
     <div class=" col-md-2 ol-sm-5 col-xs-12 text-center" >
         <button class="btn btn-danger btn-sm"> <span class="glyphicon glyphicon-remove"></span> </button>
-        <button type="submit" class="btn btn-success btn-lg"> <span class="glyphicon glyphicon-ok"></span> </button>
+        <button id="btnSubmit" class="btn btn-success btn-lg"> <span class="glyphicon glyphicon-ok"></span> </button>
     </div>
 
  

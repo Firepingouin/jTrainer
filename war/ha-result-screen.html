@@ -19,9 +19,9 @@
       <nav class="navbar navbar-inverse" role="navigation">
         <div class=" col-md-10 col-sm-10 col-xs-10 ">
             <form class="navbar-form navbar-left"  style="width:100%" role="search">
-                <button type="submit" class="btn btn-default">Search</button>
+                <button id="btnSearch" type="button" class="btn btn-default">Search</button>
                 <div class="form-group"  style="width:90%">
-                    <input type="text"  style="width:100%" class="form-control" placeholder="Search">
+                    <input id="inputSearch" type="text"  style="width:100%" class="form-control" placeholder="Search">
                 </div>
           </form>
         </div>
@@ -32,38 +32,28 @@
       </nav>
       <!-- ------------------------------------------- HEADER ZONE END ------------------------------------------- -->
       
+      <div class="mid" id="pleaseWait" data-backdrop="static" data-keyboard="false">
+                <img class="loadImg" src="img/loader.gif"><img>
+    	</div>
+      
       <div class=" col-md-12 col-sm-12 col-xs-12 " style="margin-bottom:40px">
           <h3> Training plans</h3>
-          <div class=" col-md-6 col-sm-6 col-xs-6">
-             <button type="submit" class="btn btn-link">Intensive Running  </button>
-          </div>
-          <div class=" col-md-6 col-sm-6 col-xs-6">
-               <label class="btn"> <span class="glyphicon glyphicon-time"></span> 50 min. </label>
+          <div id="resIntensiveRunning">
           </div>
       </div>
       
       <div class=" col-md-12 col-sm-12 col-xs-12 " style="margin-bottom:40px">
           <h3>Exercices</h3>
-           <div class=" col-md-6 col-sm-6 col-xs-6">
-             <button type="submit" class="btn btn-link">Running Warm up  </button>
-          </div>
-          <div class=" col-md-6 col-sm-6 col-xs-6">
-               <label class="btn"> <span class="glyphicon glyphicon-time"></span> 10 min. </label>
-          </div>
-           <div class=" col-md-6 col-sm-6 col-xs-6">
-             <button type="submit" class="btn btn-link">Running 30/30 </button>
-          </div>
-          <div class=" col-md-6 col-sm-6 col-xs-6">
-               <label class="btn"> <span class="glyphicon glyphicon-time"></span> 15 min. </label>
-          </div>
+          <div id="resExercices">
+	       </div>
       </div>
       
       
       <div class=" col-md-12 col-sm-12 col-xs-12 " style="margin-bottom:40px">
           <h3>News</h3>
-          <p>From the Kastor Kitchen: Farm Fresh Facial [http://www.runnersworld.com/recipes/from-the-kastor-kitchen-farm-fresh-facial] Use leftover egg yolk to clear up</p>
-          
-          <p>From the Kastor Kitchen: Farm Fresh Facial [http://www.runnersworld.com/recipes/from-the-kastor-kitchen-farm-fresh-facial] Use leftover egg yolk to clear up</p>
+          <div id="resNews">
+          	
+      	</div>
       </div>
       
       
@@ -84,5 +74,6 @@
     <script src="js/bootstrap.min.js"></script>
     
     <script src="js/header.js"></script>
+    <script src="js/result-screen.js"></script>
   </body>
 </html>
