@@ -177,7 +177,7 @@ public class JSearchServlet extends HttpServlet {
 				trainingPlanJson.put("titre", titre);
 				trainingPlanJson.put("description", description);
 				trainingPlanJson.put("domaineId", domaineId);
-				trainingPlanJson.put("key", trainingPlan.getKey().toString());
+				trainingPlanJson.put("id", trainingPlan.getKey().getId());
 				int dureeTotaleTrainingPlan = 0;
 
 				// On requête les exercices pour obtenir la durée totale du
@@ -290,7 +290,7 @@ public class JSearchServlet extends HttpServlet {
 				trainingPlanJson.put("titre", titre);
 				trainingPlanJson.put("description", description);
 				trainingPlanJson.put("domaineId", domaineId);
-				trainingPlanJson.put("key", trainingPlan.getKey().toString());
+				trainingPlanJson.put("id", trainingPlan.getKey().getId());
 				int dureeTotaleTrainingPlan = 0;
 
 				// On requête les exercices pour obtenir la durée totale du
