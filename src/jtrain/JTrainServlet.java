@@ -4,6 +4,7 @@ import java.awt.List;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -110,7 +111,15 @@ public class JTrainServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-
+		
+		// TEST TODO Delete
+		Enumeration params = req.getParameterNames(); 
+		while(params.hasMoreElements()){
+		 String paramName = (String)params.nextElement();
+		 System.out.println("Attribute Name - "+paramName+", Value - "+req.getParameter(paramName));
+		}
+		// FIN TEST
+		
 		String action = req.getParameter("action");
 
 		if (action.equals("add")) {
@@ -118,20 +127,56 @@ public class JTrainServlet extends HttpServlet {
 		} else if (action.equals("search")) {
 
 		}
+		
 	}
 
 	private void addTrainingPlan(HttpServletRequest req) {
 
 		// Récupération de l'objet JSON
 		System.out.println("--");
-		String jsonString = req.getParameter("trainingPlan");
-		System.out.println(jsonString);
-		if (jsonString != null) {
+		JSONObject json = new JSONObject();
+		try {
+			json.put("titre", req.getParameter("trainingPlan[titre]"));
+			json.put("description", req.getParameter("trainingPlan[description]"));
+			json.put("domaineId", req.getParameter("trainingPlan[domaineId]"));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// test
+		int i=0;
+		int nbExercices=(req.getParameterMap().size()-4)/5;
+		JSONArray exercices = new JSONArray();
+		for(i=0;i<nbExercices;i++) {
+			JSONObject exercice = new JSONObject();
+			try {
+				exercice.put("titre", req.getParameter("exercices["+i+"][title]"));
+				exercice.put("description", req.getParameter("exercices["+i+"][desc]"));
+				exercice.put("duree", req.getParameter("exercices["+i+"][duree]"));
+				exercice.put("repetitions", req.getParameter("exercices["+i+"][rep]"));
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			exercices.put(exercice);
+			try {
+				json.put("exercices", exercices);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		System.out.println(exercices);
+		System.out.println(json);
+		
+		// end
+		if (json.length() > 0) {
 			Queue queue = QueueFactory.getDefaultQueue();
 
 			// Ajout d’une tache simple
 			TaskOptions task = TaskOptions.Builder.withUrl("/addTrainingPlan")
-					.param("trainingPlan", jsonString);
+					.param("trainingPlan", json.toString());
 			queue.add(task);
 
 			// Ajout d’une tache simple avec des paramètres de configuration

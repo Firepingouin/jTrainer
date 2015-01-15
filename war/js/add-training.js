@@ -14,6 +14,9 @@
 					this.cptID = 0;
 					this.gui = {
 						inputs : {
+							ttitle	: $('#formAddTraining input[name="titre"]'),
+							tdesc	: $('#formAddTraining textarea[name="description"]'),
+							tdomain	: $('#formAddTraining select[name="domaineId"]'),
 							add 	: $('#exerciceAdd'),
 							title 	: $('#exerciceTitle'),
 							desc 	: $('#exerciceDescription'),
@@ -59,17 +62,22 @@
 						
 						that.gui.wait.show();
 						
-						var postData = [];
-						postData[0] = {name : "action", value : "add"};
-						var formData = that.gui.inputs.form.serializeArray();
-						formData[formData.length] = {name : "exercices", value : that.exercices};
-						postData[postData.length] = {name : "trainingPlan", value : formData};;
-					    console.log(postData);
-					    $.post("train", postData, function(data)
+						console.log(that.gui.inputs.form.serializeArray());
+						
+						var jsonData = {
+								action : "add",
+								trainingPlan : {
+									titre 		: that.gui.inputs.ttitle.val(),
+									description	: that.gui.inputs.tdesc.val(),
+									domaineId	: that.gui.inputs.tdomain.val(),
+								},
+								exercices : that.exercices,
+						}
+					    
+					    $.post("train", jsonData, function(data)
 				        {
 				        	that.gui.wait.hide();
-				        	//window.location.href = "ha-search-screen.html";
-				        	console.log("addTraining ok !");
+				        	window.location.href = "ha-search-screen.html";
 				        },"json")
 						.fail(function() {
 						    console.log("Fail addTraining !");
