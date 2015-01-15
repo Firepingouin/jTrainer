@@ -15,11 +15,22 @@ Liste des tâches :
 
 	- Maxime
 		- Développement Front End Javascript / JQuery
-			-
-			-
-			-
-			-
-			-
+			- Page d'accueil
+				- Récupération du message dans le memcache sinon dans le datastore
+			- TrainingPlan
+				- Ajout des exercices dans un tableau
+				- Mise à jour en temps réel de la durée totale du plan d'entrainement en haut à droite en fonction du temps des exercices et de leurs répétitions
+				- Envoi du trainingPlan en post en ajax
+			- Page de recherche (search-page.js)
+				- Récupère tous les domaines présent
+				- Domaines cliquables, renvoit vers les résultats selon le domaine
+			- Header search (header.js)
+				- Barre de recherche qui renvoit vers ha-result-screen.html avec le paramètre passé en get
+				- Connexion OpenID (Google, Yahoo et Open), affiche le nom d'utilisateur quand connecté
+			- Page de résultats
+				- Recherche en AJAX les résultats selon le paramètre (seachKeyword quand c'est la recherche ou domainId quand on a cliqué sur un domaine)
+				- Affiche les trainingPlan et exercices correspondant + les news
+			- 
 		- Connexion avec Open Id (Servlet JLogin)
 		- Mise en place de la page index
 		- Déploiement de l'application sur Google App Engine
@@ -41,4 +52,6 @@ Liste des questions non réalisées:
 	- Communication avec un coach
 
 URL de l'application :
-	> ..... A COMPLETER ....
+	> http://personal-trainer-lesbpari.appspot.com/
+	
+NB : en local ne pas oublier d'appeler /fixtures pour populer le datastore
