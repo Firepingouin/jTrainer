@@ -16,4 +16,15 @@
 	.always(function() {
 		console.log( "Open ID Login Ok !" );
 	});
+	var header = {
+		button 	: {
+			search 	: $('#btnSearch'),
+		},
+		input	: {
+			search	: $('#inputSearch'),
+		}
+	}
+	header.button.search.on('click', function(e) {
+		window.location.href = "ha-result-screen.html?searchKeyword="+header.input.search.val();
+	});
 }();

@@ -1,6 +1,7 @@
 package jtrain;
 
 import java.io.IOException;
+import java.util.Enumeration;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -22,18 +23,37 @@ public class JTrainingTaskServlet extends HttpServlet {
 
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
-
+		
+		// TEST
+		System.out.println("--");
+		System.out.println("/addTrainingPlan");
+		Enumeration params = req.getParameterNames(); 
+		while(params.hasMoreElements()){
+		 String paramName = (String)params.nextElement();
+		 System.out.println("Attribute Name - "+paramName+", Value - "+req.getParameter(paramName));
+		}
+		// FIN TEST
+		JSONObject trainingPlan = null;
 		try {
-			JSONObject json = new JSONObject(req.getParameter("trainingPlan")).getJSONObject("trainingPlan");
+			trainingPlan = new JSONObject(req.getParameter("trainingPlan"));
+		} catch (JSONException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 
-			// Récupération des paramètres du Training Plan
-			String titre = json.getString("titre");
-			String description = json.getString("description");
-			long domaineId = json.getLong("domaineId");
+		if(trainingPlan==null) {
+			return;
+		}
 
-			if (titre == null || description == null)
-				return;
-
+		// Récupération des paramètres du Training Plan
+		String titre;
+		String description;
+		String domaineId;
+		try {
+			domaineId = trainingPlan.getString("domaineId");
+			titre = trainingPlan.getString("titre");
+			description = trainingPlan.getString("description");
+			
 			// Ajout du training plan
 			Entity t = new Entity("TrainingPlan");
 			t.setProperty("titre", titre);
@@ -44,34 +64,45 @@ public class JTrainingTaskServlet extends HttpServlet {
 			long trainingPlanId = (t.getKey().getId());
 
 			// Récupération des exercices
-			JSONArray exercices = json.getJSONArray("exercices");
+			JSONArray exercices = null;
+			try {
+				exercices = new JSONArray(trainingPlan.getString("exercices"));
+			} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			if (exercices != null) {
 				for (int i = 0; i < exercices.length(); i++) {
 					// Récupération des paramètres de l'exercice
-					JSONObject exercice = exercices.getJSONObject(i);
-					String titreExercice = exercice.getString("titre");
-					String descriptionExercice = exercice
-							.getString("description");
-					int duree = exercice.getInt("duree");
-					int repetitions = exercice.getInt("repetitions");
+					JSONObject exercice;
+					try {
+						exercice = exercices.getJSONObject(i);
+						String titreExercice = exercice.getString("titre");
+						String descriptionExercice = exercice
+								.getString("description");
+						int duree = exercice.getInt("duree");
+						int repetitions = exercice.getInt("repetitions");
+						if (titreExercice == null || descriptionExercice == null)
+							return;
 
-					if (titreExercice == null || descriptionExercice == null)
-						return;
+						// Ajout de l'exercice
+						Entity e = new Entity("Exercice");
+						e.setProperty("titre", titreExercice);
+						e.setProperty("description", descriptionExercice);
+						e.setProperty("duree", duree);
+						e.setProperty("repetitions", repetitions);
+						e.setProperty("trainingPlanId", trainingPlanId);
 
-					// Ajout de l'exercice
-					Entity e = new Entity("Exercice");
-					e.setProperty("titre", titreExercice);
-					e.setProperty("description", descriptionExercice);
-					e.setProperty("duree", duree);
-					e.setProperty("repetitions", repetitions);
-					e.setProperty("trainingPlanId", trainingPlanId);
-
-					datastore.put(e);
+						datastore.put(e);
+					} catch (JSONException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			}
-		} catch (JSONException e) {
+		} catch (JSONException e2) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e2.printStackTrace();
 		}
 	}	
 }

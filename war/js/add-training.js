@@ -14,6 +14,9 @@
 					this.cptID = 0;
 					this.gui = {
 						inputs : {
+							ttitle	: $('#formAddTraining input[name="titre"]'),
+							tdesc	: $('#formAddTraining textarea[name="description"]'),
+							tdomain	: $('#formAddTraining select[name="domaineId"]'),
 							add 	: $('#exerciceAdd'),
 							title 	: $('#exerciceTitle'),
 							desc 	: $('#exerciceDescription'),
@@ -21,7 +24,8 @@
 							min 	: $('#exerciceMin'),
 							sec 	: $('#exerciceSec'),
 							rep 	: $('#exerciceRepetitions'),
-							submit	: $('button[type="submit"]'),
+							submit	: $('#btnSubmit'),
+							form 	: $('#formAddTraining'),
 						},
 						domains		: $('#selectDomains'),
 						table 		: $('#tableExercices'),
@@ -52,28 +56,31 @@
 						that.add();
 					});
 					
-					this.gui.inputs.submit.on('submit', function(e){
-											
+					this.gui.inputs.submit.on('click', function(e){
+									
 						e.preventDefault();
 						
 						that.gui.wait.show();
 						
-						var postData = $(this).serializeArray();
-					    postData["exercices"] = getJsonExercices();
-					    $.ajax(
-					    {
-					        url : "train",
-					        type: "POST",
-					        data : postData,
-					        success:function(data, textStatus, jqXHR)
-					        {
-					        	that.gui.wait.hide();
-					        	window.location.href = "ha-search-screen.html";
-					        },
-					        error: function(jqXHR, textStatus, errorThrown)
-					        {
-					            //if fails     
-					        }
+						console.log(that.gui.inputs.form.serializeArray());
+						
+						var jsonData = {
+								action : "add",
+								trainingPlan : {
+									titre 		: that.gui.inputs.ttitle.val(),
+									description	: that.gui.inputs.tdesc.val(),
+									domaineId	: that.gui.inputs.tdomain.val(),
+								},
+								exercices : that.exercices,
+						}
+					    
+					    $.post("train", jsonData, function(data)
+				        {
+				        	that.gui.wait.hide();
+				        	window.location.href = "ha-search-screen.html";
+				        },"json")
+						.fail(function() {
+						    console.log("Fail addTraining !");
 					    });					
 					});
 				},
@@ -144,13 +151,13 @@
 				},
 				totalTimeToSec :function() {
 					var total = handleExercice.gui.totaltime.text().trim().split(':');
-					return toSec(total[0],total[1],total[2],1);
-				}
+					return tools.toSec(total[0],total[1],total[2],1);
+				},
 				addTime : 		function(sec) {
-					setTime(totalTimeToSec()+sec);
+					tools.setTime(tools.totalTimeToSec()+sec);
 				},
 				removeTime : 	function(sec) {
-					setTime(totalTimeToSec()-sec);
+					tools.setTime(tools.totalTimeToSec()-sec);
 				},
 				setTime : 		function(totalsec) {
 					var hours = parseInt( totalsec / 3600 ) % 24;
