@@ -41,69 +41,78 @@ import com.sun.java.swing.plaf.windows.resources.windows;
 public class JTrainServlet extends HttpServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
-		resp.setContentType("application/json");
-		PrintWriter out = resp.getWriter();
-		JSONObject details = new JSONObject();
 		
-		String key = req.getParameter("key");
-		if (!key.equals("")) {
-			details = this.getDetails(key);
+		String idString = req.getParameter("id");
+		
+		if (!idString.equals("") && idString != null) {
+			System.out.println("Get all details from training plan");
+			resp.setContentType("application/json");
+			PrintWriter out = resp.getWriter();
+			JSONObject details = new JSONObject();
+			
+			Long id = Long.parseLong(idString);
+			details = this.getDetails(id);
+			
+			out.print(details);
+			out.flush();	
 		}
-		out.print(details);
-		out.flush();
 	}
 
-	private JSONObject getDetails(String key) {
+	private JSONObject getDetails(Long id) {
 		JSONObject details = new JSONObject();
-//		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-//		// On filtre sur le domaine
-//		Entity tp;
-//		try {
-//			tp = datastore.get(KeyFactory.stringToKey(key.toString()));
-//			if(tp != null) {
-//				JSONObject trainingPlanJson = new JSONObject();
-//				ArrayList<JSONObject> exercices = new ArrayList<JSONObject>();
-//				trainingPlanJson.put("titre", tp.getProperty("titre"));
-//				trainingPlanJson.put("description", tp.getProperty("description"));
-//				
-//				// Requete
-//				Filter trainingPlanFilter = new FilterPredicate("trainingPlanId", FilterOperator.EQUAL, tp.getKey().getId());
-//				Query q = new Query("Exercice").setFilter(trainingPlanFilter);
-//				PreparedQuery pq = datastore.prepare(q);
-//				
-//				for (Entity exercice : pq.asIterable()) {
-//					// Récupération des attributs de l'exercice
-//					String titre = (String) exercice.getProperty("titre");
-//					String description = (String) exercice.getProperty("description");
-//					int duree = Integer.parseInt(exercice.getProperty("duree")
-//							.toString());
-//					int repetitions = Integer.parseInt(exercice.getProperty(
-//							"repetitions").toString());
-//					Long trainingPlanId = Long.parseLong(exercice.getProperty(
-//							"trainingPlanId").toString());
-//					Long exerciceId = exercice.getKey().getId();
-//
-//					// On construit l'objet JSON de l'exercice
-//					JSONObject exerciceJson = new JSONObject();
-//
-//					// On set les attributs de l'objet
-//					exerciceJson.put("titre", titre);
-//					exerciceJson.put("description", description);
-//					exerciceJson.put("duree", duree);
-//					exerciceJson.put("repetitions", repetitions);
-//					exerciceJson.put("trainingPlanId", trainingPlanId);
-//					exerciceJson.put("exerciceId", exerciceId);
-//
-//					// On ajoute l'exercice au tableau de résultats
-//					exercices.add(exerciceJson);
-//				}
-//				JSONArray exercicesJson = new JSONArray(exercices);
-//				trainingPlanJson.put("exercices", exercicesJson);
-//				details.put("trainingPlan", trainingPlanJson);
-//			}
-//		} catch (EntityNotFoundException | JSONException e) {
-//			e.printStackTrace();
-//		}
+		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+		// On filtre sur le domaine
+		try {
+				Filter idFilter = new FilterPredicate("id", FilterOperator.EQUAL, id);
+				Query q = new Query("TrainingPlan").setFilter(idFilter);
+				PreparedQuery pq = datastore.prepare(q);
+				Entity trainingPlan = pq.asSingleEntity();
+				
+				if(trainingPlan != null) {
+					JSONObject trainingPlanJson = new JSONObject();
+					ArrayList<JSONObject> exercices = new ArrayList<JSONObject>();
+					
+					trainingPlanJson.put("titre", trainingPlan.getProperty("titre"));
+					trainingPlanJson.put("description", trainingPlan.getProperty("description"));
+
+					// Requete
+					Filter trainingPlanFilter = new FilterPredicate("trainingPlanId", FilterOperator.EQUAL, id);
+					Query q2 = new Query("Exercice").setFilter(trainingPlanFilter);
+					PreparedQuery pq2 = datastore.prepare(q2);
+					
+					for (Entity exercice : pq2.asIterable()) {
+						// Récupération des attributs de l'exercice
+						String titre = (String) exercice.getProperty("titre");
+						String description = (String) exercice.getProperty("description");
+						int duree = Integer.parseInt(exercice.getProperty("duree")
+								.toString());
+						int repetitions = Integer.parseInt(exercice.getProperty(
+								"repetitions").toString());
+						Long trainingPlanId = Long.parseLong(exercice.getProperty(
+								"trainingPlanId").toString());
+						Long exerciceId = exercice.getKey().getId();
+
+						// On construit l'objet JSON de l'exercice
+						JSONObject exerciceJson = new JSONObject();
+
+						// On set les attributs de l'objet
+						exerciceJson.put("titre", titre);
+						exerciceJson.put("description", description);
+						exerciceJson.put("duree", duree);
+						exerciceJson.put("repetitions", repetitions);
+						exerciceJson.put("trainingPlanId", trainingPlanId);
+						exerciceJson.put("exerciceId", exerciceId);
+
+						// On ajoute l'exercice au tableau de résultats
+						exercices.add(exerciceJson);	
+					}
+					JSONArray exercicesJson = new JSONArray(exercices);
+					trainingPlanJson.put("exercices", exercicesJson);
+					details.put("trainingPlan", trainingPlanJson);
+				}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		return details;
 	}
 
@@ -116,7 +125,10 @@ public class JTrainServlet extends HttpServlet {
 		if (action.equals("add")) {
 			this.addTrainingPlan(req);
 		} else if (action.equals("search")) {
-
+			Long id = Long.parseLong(req.getParameter("trainingPlanId"));
+			if(id != null && id != 0) {
+				this.getDetails(id);	
+			}
 		}
 	}
 
