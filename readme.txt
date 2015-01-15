@@ -20,7 +20,7 @@ Liste des tâches :
 			- Ajout TrainingPlan (ha-addTraining.html / add-training.js)
 				- Ajout des exercices dans un tableau
 				- Mise à jour en temps réel de la durée totale du plan d'entrainement en haut à droite en fonction du temps des exercices et de leurs répétitions
-				- Envoi du trainingPlan en post en ajax
+				- Envoi du trainingPlan en post en AJAX
 			- Page de recherche (search-page.js / ha-search-screen.html)
 				- Récupère tous les domaines présent
 				- Domaines cliquables, renvoit vers les résultats selon le domaine
