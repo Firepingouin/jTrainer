@@ -16,9 +16,9 @@
 	var seek = search[1];
 	var json;
 	if(search[0]=="searchKeyword") {
-		json = { type: "search", searchKeyword: seek }
+		json = { type: "search", searchKeyword: decodeURIComponent(seek) }
 	} else if (search[0]=="domainid") {
-		json = { type: "search", domainId: seek };
+		json = { type: "search", domainId: decodeURIComponent(seek) };
 	}
 	var jqxhr = $.post( "search", json, function( data ) {
 
